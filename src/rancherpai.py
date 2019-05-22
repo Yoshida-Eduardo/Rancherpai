@@ -16,7 +16,7 @@ def get_environment(environmentName):
 
 def get_services(environment):
   r = requests.get(os.environ['RANCHER_URL'] + 'v1/services?environmentId=' + environment['id'],auth=(os.environ['RANCHER_ACCESS_KEY'],os.environ['RANCHER_SECRET_KEY']))
-  
+
   if (len(r.json()['data']) > 0):
     return r.json()['data']
   else:
@@ -36,7 +36,7 @@ def get_environment_status(environmentName):
   response += '\nState: ' + environment['state']
   response += '\nHealth: ' + environment['healthState']
   response += '\nServices: '
-  
+
   services = get_services(environment)
 
   if (not services):
@@ -58,12 +58,12 @@ def get_environment_status(environmentName):
 
 def get_service(serviceName,environmentName):
   environment = get_environment(environmentName)
-  
+
   if (environment == None):
     return None
   else:
     r = requests.get(os.environ['RANCHER_URL'] + 'v1/services?name=' + serviceName + '&environmentId=' + environment['id'],auth=(os.environ['RANCHER_ACCESS_KEY'], os.environ['RANCHER_SECRET_KEY']))
-    
+
     if(len(r.json()['data']) == 0 ):
       return None
     else:
@@ -79,7 +79,7 @@ def get_service_status(serviceName,environmentName):
       description = service['description']
     else:
       description = 'null'
-    return 'Name: ' + serviceName +'\nDescription: ' + description + '\nStack: ' + environmentName +  '\nState: ' + service['state'] + '\nHealth: ' + service['healthState'] 
+    return 'Name: ' + serviceName +'\nDescription: ' + description + '\nStack: ' + environmentName +  '\nState: ' + service['state'] + '\nHealth: ' + service['healthState']
 
 def get_service_state(serviceName,environmentName):
   service = get_service(serviceName,environmentName)
@@ -105,7 +105,7 @@ def service_upgrade(serviceName,environmentName):
 
   if (not service):
     return 'Service or environment not found'
-    
+
   if(service['state'] == 'upgraded'):
     return 'the service ' + service['name'] + ' is already being upgraded finish the upgrade to continue'
 
@@ -144,14 +144,14 @@ def upgrade_rollback(serviceName,environmentName):
     return 'The service ' + service['name'] + ' is not being upgraded'
 
 def finish_upgrade(serviceName,environmentName):
-  
+
   service = get_service(serviceName,environmentName)
 
   if (not service):
     return 'Service or environment not found'
 
   headers = {'content-type': 'application/json'}
-  
+
   if(service['state'] == 'upgraded'):
     r = requests.post(os.environ['RANCHER_URL'] + 'v1/services/' + service['id'] + '/?action=finishupgrade',
                       headers=headers, auth=(os.environ['RANCHER_ACCESS_KEY'], os.environ['RANCHER_SECRET_KEY']));

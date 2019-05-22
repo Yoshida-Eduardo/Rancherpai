@@ -22,8 +22,8 @@ def parse_bot_commands(slack_events):
 
 def parse_direct_mention(message_text):
    matches = re.search(MENTION_REGEX, message_text)
-   if matches : 
-    return (matches.group(1), matches.group(2).strip()) 
+   if matches :
+    return (matches.group(1), matches.group(2).strip())
    else:
      return (None, None)
 
@@ -43,7 +43,7 @@ if __name__ == "__main__":
     print("Starter Bot connected and running!")
     # Read bot's user ID by calling Web API method `auth.test`
     starterbot_id = slack_client.api_call("auth.test")["user_id"]
-    while True: 
+    while True:
       command, channel = parse_bot_commands(slack_client.rtm_read())
       if command:
         respond_command(command, channel)
