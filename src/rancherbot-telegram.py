@@ -26,7 +26,7 @@ if __name__ == "__main__":
   dispatcher = updater.dispatcher
   #TODO USE TELEGRAM.EXT.COMMANDHANDLER INSTEAD OF MessageHandler
   # REQUIRES REFACTORING OF command_handler.py functions
-  handler = MessageHandler(Filters.chat(int(AUTHORIZED_CHAT)), respond_command)
+  handler = MessageHandler(Filters.chat(int(AUTHORIZED_CHAT)) & Filters.entity('mention'), respond_command)
   dispatcher.add_handler(handler)
 
   updater.start_polling(poll_interval=1)
